@@ -17,7 +17,6 @@
 # limitations under the License.
 #
 
-default['container_passenger']['ruby']['default_gems'] = %w[rake bundler rack]
 default['container_passenger']['ruby']['enabled'] = false
 default['container_passenger']['ruby']['versions'] = %w[2.6.2]
 default['container_passenger']['jruby']['enabled'] = false

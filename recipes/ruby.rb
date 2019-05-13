@@ -77,12 +77,19 @@ node['container_passenger']['ruby']['versions'].to_a.each do |version|
     creates "/usr/share/rvm/rubies/ruby-#{version}/bin/ruby"
     action :run
     notifies :create, "template[rvm-create-ruby-wrapper-#{version}]", :immediately
-    notifies :run, "execute[install-default-ruby-gems-#{version}]", :immediately
+  end
+
+  %w[bundle bundler].each do |executable|
+    file "/usr/share/rvm/rubies/ruby-#{version}/bin/#{executable}" do
+      action :nothing
+      subscribes :delete, "execute[rvm-install-ruby-#{version}]", :immediately
+    end
   end
 
   execute "install-default-ruby-gems-#{version}" do
-    command "/usr/share/rvm/bin/rvm-exec #{version}@global gem install #{node['container_passenger']['ruby']['default_gems'].join(' ')} --no-document"
+    command "/usr/share/rvm/bin/rvm-exec #{version}@global gem install bundler rake rack --no-document"
     action :nothing
+    subscribes :run, "execute[rvm-install-ruby-#{version}]", :immediately
   end
 
   template "rvm-create-ruby-wrapper-#{version}" do
