@@ -20,7 +20,7 @@
 ## PostgreSQL Global Development Group (PGDG)repository
 apt_repository 'pgdg' do
   uri 'http://apt.postgresql.org/pub/repos/apt/'
-  key 'ACCC4CF8'
+  key '7FCC7D46ACCC4CF8'
   distribution "#{node['lsb']['codename']}-pgdg"
   components %w[main]
 end
@@ -50,7 +50,7 @@ end
 ## Rowan's Redis PPA repository
 apt_repository 'redis' do
   uri 'http://ppa.launchpad.net/chris-lea/redis-server/ubuntu'
-  key 'C7917B12'
+  key 'B9316A7BC7917B12'
   components %w[main]
 end
 
