@@ -57,18 +57,16 @@ end
 ## OpenJDK 8 PPA repository
 apt_repository 'openjdk' do
   uri 'http://ppa.launchpad.net/openjdk-r/ppa/ubuntu'
-  key 'DA1A4A13543B466853BAF164EB9B1D8886F44E2A'
+  key 'EB9B1D8886F44E2A'
   components %w[main]
 end
 
 ## RVM PPA repository
 apt_repository 'rvm' do
   uri 'http://ppa.launchpad.net/rael-gc/rvm/ubuntu'
-  key '7BE3E5681146FD4F1A40EDA28094BB14F4E3FBBE'
+  key '8094BB14F4E3FBBE'
   components %w[main]
 end
-
-## nginx: C300EE8C
 
 ## Update apt repository information
 apt_update 'refresh' do
