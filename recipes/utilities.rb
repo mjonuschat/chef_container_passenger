@@ -17,6 +17,6 @@
 # limitations under the License.
 #
 
-package %w[build-essential git rvm] do
+package %w[build-essential git rvm libgmp-dev libssl-dev] do
   action :upgrade
 end
