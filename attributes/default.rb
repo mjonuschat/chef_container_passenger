@@ -23,4 +23,12 @@ default['container_passenger']['jruby']['enabled'] = false
 default['container_passenger']['jruby']['version'] = '9.2.6.0'
 default['container_passenger']['python']['enabled'] = false
 default['container_passenger']['node']['enabled'] = false
-default['container_passenger']['node']['version'] = 'node_10.x'
+default['container_passenger']['node']['version'] = value_for_platform(
+    {
+        %w[ubuntu debian] => {
+            '18.04' => 'node_10.x',
+            'default' => 'node_12.x',
+        }
+    }
+)
+
