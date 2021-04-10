@@ -70,13 +70,10 @@ dpkg_package 'ruby-fake' do
 end
 
 node['container_passenger']['ruby']['versions'].to_a.each do |version|
-  major_version = Gem::Version.new(version).segments[0,2].join('.')
-
   execute "rvm-install-ruby-#{version}" do
     command "/usr/share/rvm/bin/rvm install ruby-#{version}"
     creates "/usr/share/rvm/rubies/ruby-#{version}/bin/ruby"
     action :run
-    notifies :create, "template[rvm-create-ruby-wrapper-#{version}]", :immediately
   end
 
   %w[bundle bundler].each do |executable|
@@ -92,18 +89,19 @@ node['container_passenger']['ruby']['versions'].to_a.each do |version|
     subscribes :run, "execute[rvm-install-ruby-#{version}]", :immediately
   end
 
-  template "rvm-create-ruby-wrapper-#{version}" do
-    path "/usr/bin/ruby#{major_version}"
-    source 'rvm-wrapper.erb'
-    variables(version: "ruby-#{version}", command: "ruby")
-    owner 'root'
-    group 'root'
-    mode '0755'
-    action :nothing
-  end
-
   file "/usr/share/rvm/rubies/ruby-#{version}/lib/libruby-static.a" do
     action :delete
+  end
+
+  execute "rvm-regenerate-wrappers-ruby-#{version}" do
+    command "/usr/share/rvm/bin/rvm-exec ruby-#{version} rvm wrapper regenerate"
+    creates "/usr/share/rvm/wrappers/ruby-#{version}/ruby"
+    action :run
+  end
+
+  link "rvm-create-ruby-wrapper-#{version}" do
+    to "/usr/share/rvm/wrappers/ruby-#{version}/ruby"
+    target_file "/usr/bin/ruby#{Gem::Version.new(version).segments[0,2].join('.')}"
   end
 end
 
@@ -125,13 +123,7 @@ end
 
 ## Create default wrappers for common gems
 %w[ruby gem rake bundle bundler].each do |name|
-  template "rvm-create-#{name}-default-wrapper" do
-    path "/usr/bin/#{name}"
-    source 'rvm-wrapper.erb'
-    variables(version: 'default', command: name)
-    owner 'root'
-    group 'root'
-    mode '0755'
-    action :create
+  link "/usr/bin/#{name}" do
+    to "/usr/share/rvm/wrappers/default/#{name}"
   end
 end

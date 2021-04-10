@@ -17,6 +17,6 @@
 # limitations under the License.
 #
 
-package %w[build-essential git rvm libgmp-dev libssl-dev] do
+package %w[build-essential git rvm libgmp-dev libssl-dev postgresql-client] do
   action :upgrade
 end
