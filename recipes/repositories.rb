@@ -52,6 +52,7 @@ apt_repository 'redis' do
   uri 'http://ppa.launchpad.net/chris-lea/redis-server/ubuntu'
   key 'B9316A7BC7917B12'
   components %w[main]
+  only_if { platform_family?('ubuntu') && node['platform_version'].to_f < 22.0 }
 end
 
 ## OpenJDK 8 PPA repository
